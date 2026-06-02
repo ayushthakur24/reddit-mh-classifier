@@ -42,7 +42,9 @@ Logistic Regression  binary classification with class_weight='balanced'
 Prediction + confidence score
 
 
+
 Results
+
 Metric                  Score
 CV F1 (weighted)        ~0.87
 Test Accuracy           ~88%
@@ -52,4 +54,5 @@ Scores are approximate — retrain to reproduce exact numbers.
 
 
 Disclaimer
+
 This project is for educational purposes only. If you or someone you know is experiencing a mental health crisis, please contact a qualified professional or a crisis helpline.
