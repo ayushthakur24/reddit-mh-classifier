@@ -3,6 +3,7 @@ A machine learning classifier that detects mental health distress signals in Red
 
 
 Problem Statement
+
 Reddit communities like r/depression and r/anxiety contain posts where users express distress — but these signals are hard to surface at scale. This project trains a binary text classifier to flag posts that show signs of mental health distress, using only the post text as input.
 
 
