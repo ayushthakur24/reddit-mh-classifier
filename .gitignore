@@ -2,6 +2,7 @@
 __pycache__/
 *.py[codz]
 *$py.class
+*.pyc
 
 # C extensions
 *.so
@@ -216,3 +217,24 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+#Virtual Environment
+venv/
+
+# Dataset files
+data/raw/
+data/processed
+
+#Model artifacts
+model/
+
+#VS Code
+.vscode/
+
+#OS Files
+.DS_Store
+Thumbs.db
+
+
+
+
