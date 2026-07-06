@@ -24,6 +24,56 @@ st.set_page_config(
     layout="centered"
 )
 
+# ==========================================================
+# Sidebar
+# ==========================================================
+
+with st.sidebar:
+
+    st.title("🧠 About")
+
+    st.markdown(
+        """
+This application predicts whether a Reddit post
+shows signs of psychological stress using a
+Machine Learning model.
+"""
+    )
+
+    st.divider()
+
+    st.subheader("🤖 Model")
+
+    st.write("• Algorithm : Logistic Regression")
+
+    st.write("• Feature Extraction : TF-IDF")
+
+    st.write("• Vocabulary Size : 5000")
+
+    st.write("• Pipeline : Scikit-Learn")
+
+    st.divider()
+
+    st.subheader("📊 Dataset")
+
+    st.write("Training Samples : 2,838")
+
+    st.write("Test Samples : 715")
+
+    st.write("Classes : Stress / No Stress")
+
+    st.divider()
+
+    st.subheader("📈 Model Performance")
+
+    st.metric("Accuracy", "72.17%")
+
+    st.metric("F1 Score", "74.26%")
+
+    st.metric("Recall", "77.78%")
+
+    
+
 st.title("🧠 Reddit Mental Health Stress Detector")
 
 st.write(
