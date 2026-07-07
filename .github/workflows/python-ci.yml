@@ -32,18 +32,18 @@ jobs:
           pip install -r requirements.txt
           pip install pytest pytest-cov
 
-      - name: Run Tests
+      - name: Train Model
         run: |
-          pytest -v
+          python -m src.train
 
-      - name: Show Coverage
+      - name: Run Evaluation
         run: |
-          pytest --cov=src --cov-report=term
-      
+          python -m src.evaluate
+
+      - name: Run Visualization
+        run: |
+          python -m src.visualization
+
       - name: Run Tests with Coverage
         run: |
-          pytest \
-            -v \
-            --cov=src \
-            --cov-report=term \
-            --cov-report=xml
+          pytest -v --cov=src --cov-report=term
