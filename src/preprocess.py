@@ -1,5 +1,35 @@
-import re
+"""
+Preprocess the Reddit Mental Health dataset.
 
+This module:
+1. Cleans Reddit posts
+2. Generates processed training dataset
+"""
+
+# ==========================================================
+# Imports
+# ==========================================================
+
+import re
+from pathlib import Path
+
+import pandas as pd
+
+
+# ==========================================================
+# Project Paths
+# ==========================================================
+
+RAW_DATA_PATH = Path("data/raw/extracted/dreaddit-train.csv")
+
+PROCESSED_DIR = Path("data/processed")
+
+PROCESSED_FILE = PROCESSED_DIR / "train_clean.csv"
+
+
+# ==========================================================
+# Text Cleaning
+# ==========================================================
 
 def clean_text(text):
     """
@@ -12,27 +42,22 @@ def clean_text(text):
     4. Remove extra spaces
     """
 
-    # Convert input to string
     text = str(text)
 
-    # Convert to lowercase
     text = text.lower()
 
-    # Remove URLs
     text = re.sub(
         r"http\S+|www\S+",
         "",
         text
     )
 
-    # Remove punctuation
     text = re.sub(
         r"[^\w\s]",
         "",
         text
     )
 
-    # Remove multiple spaces
     text = re.sub(
         r"\s+",
         " ",
@@ -40,3 +65,45 @@ def clean_text(text):
     )
 
     return text.strip()
+
+
+# ==========================================================
+# Dataset Preprocessing
+# ==========================================================
+
+def preprocess_dataset():
+    """
+    Loads the raw dataset, cleans the text,
+    and saves the processed dataset.
+    """
+
+    print("Loading training dataset...")
+
+    train_df = pd.read_csv(RAW_DATA_PATH)
+
+    print(f"Loaded {len(train_df)} records.")
+
+    train_df = train_df.copy()
+
+    train_df["clean_text"] = train_df["text"].apply(clean_text)
+
+    PROCESSED_DIR.mkdir(
+        parents=True,
+        exist_ok=True
+    )
+
+    train_df.to_csv(
+        PROCESSED_FILE,
+        index=False
+    )
+
+    print(f"\nProcessed dataset saved to:\n{PROCESSED_FILE}")
+
+
+# ==========================================================
+# Main
+# ==========================================================
+
+if __name__ == "__main__":
+
+    preprocess_dataset()
