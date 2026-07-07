@@ -31,8 +31,12 @@ from sklearn.metrics import (
 from src.preprocess import clean_text
 
 import matplotlib.pyplot as plt
-from sklearn.metrics import ConfusionMatrixDisplay
-
+from sklearn.metrics import (
+    ConfusionMatrixDisplay,
+    roc_curve,
+    auc,
+    precision_recall_curve,
+)
 
 # ==========================================================
 # Project Constants
@@ -75,6 +79,9 @@ pipeline = joblib.load(MODEL_PATH)
 predictions = pipeline.predict(X_test)
 
 prediction_probabilities = pipeline.predict_proba(X_test)
+
+# Probability that a post belongs to the Stress class
+stress_probability = prediction_probabilities[:, 1]
 
 
 # ==========================================================
@@ -166,5 +173,92 @@ plt.savefig(
 
 plt.close()
 
+# ==========================================================
+# ROC Curve
+# ==========================================================
 
-print("\nEvaluation artifacts saved successfully.")
+false_positive_rate, true_positive_rate, _ = roc_curve(
+    y_test,
+    stress_probability
+)
+
+roc_auc = auc(
+    false_positive_rate,
+    true_positive_rate
+)
+
+plt.figure(figsize=(8, 6))
+
+plt.plot(
+    false_positive_rate,
+    true_positive_rate,
+    linewidth=2,
+    label=f"AUC = {roc_auc:.3f}"
+)
+
+plt.plot(
+    [0, 1],
+    [0, 1],
+    linestyle="--",
+    color="gray"
+)
+
+plt.xlabel("False Positive Rate")
+plt.ylabel("True Positive Rate")
+plt.title("ROC Curve")
+
+plt.legend()
+
+plt.grid(alpha=0.3)
+
+plt.savefig(
+    ASSETS_PATH / "roc_curve.png",
+    dpi=300,
+    bbox_inches="tight"
+)
+
+plt.close()
+
+
+# ==========================================================
+# Precision Recall Curve
+# ==========================================================
+
+precision_values, recall_values, thresholds = precision_recall_curve(
+    y_test,
+    stress_probability
+)
+
+plt.figure(figsize=(8,6))
+
+plt.plot(
+    recall_values,
+    precision_values,
+    linewidth=2
+)
+
+plt.xlabel("Recall")
+
+plt.ylabel("Precision")
+
+plt.title("Precision Recall Curve")
+
+plt.grid(alpha=0.3)
+
+plt.savefig(
+    ASSETS_PATH / "precision_recall_curve.png",
+    dpi=300,
+    bbox_inches="tight"
+)
+
+plt.close()
+
+print("\nEvaluation artifacts generated successfully.")
+
+print("----------------------------")
+
+print("✓ metrics.json")
+print("✓ classification_report.txt")
+print("✓ confusion_matrix.png")
+print("✓ roc_curve.png")
+print("✓ precision_recall_curve.png")
