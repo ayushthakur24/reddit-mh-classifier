@@ -226,7 +226,7 @@ data/raw/
 data/processed
 
 #Model artifacts
-model/
+#model/
 
 #VS Code
 .vscode/
