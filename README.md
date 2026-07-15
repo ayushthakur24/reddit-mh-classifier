@@ -1,68 +1,321 @@
-# reddit-mh-classifier
-A machine learning classifier that detects mental health distress signals in Reddit posts using NLP. Built with Scikit-learn, deployed on Streamlit Community Cloud.
+# Reddit Mental Health Stress Detection
 
+An end-to-end Machine Learning application that detects whether a Reddit post expresses **Stress** or **No Stress** using Natural Language Processing (NLP).
 
-Problem Statement
+The project demonstrates the complete lifecycle of an ML application—from data preprocessing to model training, evaluation, visualization, automated testing, CI/CD, and deployment.
 
-Reddit communities like r/depression and r/anxiety contain posts where users express distress — but these signals are hard to surface at scale. This project trains a binary text classifier to flag posts that show signs of mental health distress, using only the post text as input.
+---
 
+## Project Overview
 
-Dataset
+This application classifies Reddit posts into one of two categories:
 
-Source: Stress Analysis in Social Media — Kaggle
-Size: ~50,000 Reddit posts
-Labels: 1 = distress signal, 0 = no distress signal
-Subreddits covered: r/depression, r/anxiety, r/SuicideWatch (positive class) vs neutral subreddits (negative class)
+- Stress
+- No Stress
 
-Tech Stack
-Layer                Tool
-Language             Python 3.11
-Data processing      Pandas,NLTK
-Feature engineering  TF-IDF(scikit-learn)
-Model                Logistic Regression (scikit-learn Pipeline)
-Evaluation           F1 score, confusion matrix, cross-validation
-App                  Streamlit
-Deployment           Streamlit Community Cloud
-Version control      Git + GitHub
+The complete pipeline includes:
 
+- Data preprocessing
+- Text cleaning
+- TF-IDF Vectorization
+- Logistic Regression classifier
+- Evaluation metrics
+- Visualization generation
+- Streamlit application
+- Automated testing
+- GitHub Actions CI/CD
 
-How It Works
-Raw post text
-     │
-     ▼
-Text cleaning        lowercase, strip URLs, remove punctuation
-     │
-     ▼
-TF-IDF vectorizer    converts text → sparse numerical matrix (bigrams, top 10k features)
-     │
-     ▼
-Logistic Regression  binary classification with class_weight='balanced'
-     │
-     ▼
-Prediction + confidence score
+---
 
+# Features
 
+- End-to-End NLP Pipeline
+- Automatic Text Cleaning
+- TF-IDF Feature Engineering
+- Logistic Regression Model
+- Prediction Probabilities
+- Model Evaluation
+- Confusion Matrix
+- ROC Curve
+- Precision-Recall Curve
+- Top Stress Words
+- Top No-Stress Words
+- Unit Tests using Pytest
+- GitHub Actions CI Pipeline
+- Production Ready Folder Structure
 
-Results
+---
 
-Metric                  Score
-CV F1 (weighted)        ~0.87
-Test Accuracy           ~88%
-Test F1 (weighted)      ~0.87
+# Project Structure
 
-Scores are approximate — retrain to reproduce exact numbers.
+```
+reddit-mh-classifier/
 
+assets/
+│
+├── confusion_matrix.png
+├── roc_curve.png
+├── precision_recall_curve.png
+├── top_stress_words.png
+├── top_no_stress_words.png
+├── metrics.json
+└── classification_report.txt
 
-Disclaimer
+data/
+│
+├── raw/
+└── processed/
 
-This project is for educational purposes only. If you or someone you know is experiencing a mental health crisis, please contact a qualified professional or a crisis helpline.
+model/
+│
+└── stress_detection_pipeline.pkl
 
-Day 1 Summary
+src/
+│
+├── preprocess.py
+├── train.py
+├── evaluate.py
+├── visualization.py
+├── predict.py
 
-On Day 1, I set up the project structure, configured the Python virtual environment, connected the Kaggle API, and downloaded the Dreaddit Stress Detection dataset. The dataset contained separate training and testing files (`dreaddit-train.csv` and `dreaddit-test.csv`), which follows a research-grade train/test split approach and eliminates the need for `train_test_split()` during initial model development.
+tests/
+│
+├── test_preprocess.py
+├── test_pipeline.py
+├── test_predict.py
+└── test_model_files.py
 
-I performed Exploratory Data Analysis (EDA) using Pandas, Matplotlib, and Seaborn. The training dataset contains 2,838 Reddit posts with a nearly balanced label distribution (1,488 stress posts and 1,350 non-stress posts), making it suitable for classification without additional balancing techniques. I analyzed the dataset schema, inspected sample records, checked for missing values, measured post lengths, and generated visualizations to understand data quality and distribution.
+app.py
 
-Further analysis revealed that URLs appeared in only one post across the entire dataset, indicating that aggressive text cleaning was unnecessary. Based on this observation, I implemented a lightweight preprocessing strategy that preserves punctuation, sentence structure, contractions, and emotional signals while converting text to lowercase and normalizing whitespace. This approach is important because linguistic cues often carry predictive information in mental health and stress detection tasks.
+README.md
+```
 
-The processed dataset was saved as `train_clean.csv` and will be used in subsequent stages for TF-IDF feature extraction, model training, evaluation, and deployment.
+---
+
+# Machine Learning Pipeline
+
+```
+Raw Dataset
+      │
+      ▼
+Text Cleaning
+      │
+      ▼
+TF-IDF Vectorizer
+      │
+      ▼
+Logistic Regression
+      │
+      ▼
+Prediction
+      │
+      ├── Metrics
+      ├── Evaluation
+      └── Visualizations
+```
+
+---
+
+# Dataset
+
+Dataset Source
+
+Stress Analysis in Social Media Dataset (Dreaddit)
+
+Downloaded automatically inside GitHub Actions using Kaggle API.
+
+Classes
+
+- Stress
+- No Stress
+
+---
+
+# Tech Stack
+
+Programming
+
+- Python
+
+Libraries
+
+- Pandas
+- NumPy
+- Scikit-Learn
+- Matplotlib
+- WordCloud
+- Joblib
+
+Testing
+
+- Pytest
+- Pytest-Cov
+
+Deployment
+
+- Streamlit
+
+Automation
+
+- GitHub Actions
+
+Version Control
+
+- Git
+- GitHub
+
+---
+
+# Model Performance
+
+| Metric | Score |
+|---------|-------|
+| Accuracy | 72.17% |
+| Precision | 71.04% |
+| Recall | 77.78% |
+| F1 Score | 74.26% |
+
+---
+
+# Visualizations
+
+## Confusion Matrix
+
+![Confusion Matrix](assets/confusion_matrix.png)
+
+---
+
+## ROC Curve
+
+![ROC Curve](assets/roc_curve.png)
+
+---
+
+## Precision Recall Curve
+
+![Precision Recall Curve](assets/precision_recall_curve.png)
+
+---
+
+## Top Stress Words
+
+![Stress Words](assets/top_stress_words.png)
+
+---
+
+## Top No Stress Words
+
+![No Stress Words](assets/top_no_stress_words.png)
+
+---
+
+# Testing
+
+The project contains 24 automated unit tests.
+
+Coverage includes:
+
+- Text preprocessing
+- Prediction pipeline
+- Model loading
+- Saved artifacts
+- Pipeline integrity
+
+Run tests
+
+```bash
+pytest -v
+```
+
+---
+
+# Continuous Integration
+
+GitHub Actions automatically performs:
+
+- Install dependencies
+- Configure Kaggle API
+- Download dataset
+- Preprocess data
+- Train model
+- Evaluate model
+- Generate visualizations
+- Execute unit tests
+
+---
+
+# Installation
+
+Clone repository
+
+```bash
+git clone https://github.com/ayushthakur24/reddit-mh-classifier.git
+```
+
+Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+Run preprocessing
+
+```bash
+python -m src.preprocess
+```
+
+Train model
+
+```bash
+python -m src.train
+```
+
+Evaluate
+
+```bash
+python -m src.evaluate
+```
+
+Visualizations
+
+```bash
+python -m src.visualization
+```
+
+Launch Streamlit
+
+```bash
+streamlit run app.py
+```
+
+---
+
+# Future Improvements
+
+- BERT based classifier
+- DistilBERT Fine-tuning
+- Docker deployment
+- Hugging Face deployment
+- FastAPI REST API
+- Batch Prediction API
+- Explainable AI using SHAP
+- MLflow experiment tracking
+- Model Monitoring
+- Kubernetes deployment
+
+---
+
+# License
+
+MIT License
+
+---
+
+# Author
+
+Ayush Thakur
+
+Senior Software Development Engineer
+
+GitHub:
+https://github.com/ayushthakur24

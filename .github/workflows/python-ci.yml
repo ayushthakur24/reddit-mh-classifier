@@ -1,0 +1,115 @@
+name: Python CI
+
+on:
+  push:
+    branches:
+      - develop
+      - main
+
+  pull_request:
+    branches:
+      - develop
+      - main
+
+jobs:
+  test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    # ---------------------------------------------------------
+    # Checkout Repository
+    # ---------------------------------------------------------
+
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    # ---------------------------------------------------------
+    # Setup Python
+    # ---------------------------------------------------------
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+
+    # ---------------------------------------------------------
+    # Install Dependencies
+    # ---------------------------------------------------------
+
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install kaggle
+
+    # ---------------------------------------------------------
+    # Configure Kaggle API
+    # ---------------------------------------------------------
+
+    - name: Configure Kaggle
+      env:
+        KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+        KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
+      run: |
+        mkdir -p ~/.kaggle
+
+        echo "{\"username\":\"$KAGGLE_USERNAME\",\"key\":\"$KAGGLE_KEY\"}" > ~/.kaggle/kaggle.json
+
+        chmod 600 ~/.kaggle/kaggle.json
+
+    # ---------------------------------------------------------
+    # Download Dataset
+    # ---------------------------------------------------------
+
+    - name: Download Dataset
+      run: |
+        mkdir -p data/raw
+        kaggle datasets download \
+          -d ruchi798/stress-analysis-in-social-media \
+          -p data/raw
+
+    # ---------------------------------------------------------
+    # Extract Dataset
+    # ---------------------------------------------------------
+
+    - name: Extract Dataset
+      run: |
+        unzip -o data/raw/stress-analysis-in-social-media.zip \
+        -d data/raw/extracted
+
+    # ---------------------------------------------------------
+    # Run Preprocessing
+    # ---------------------------------------------------------
+
+    - name: Run Preprocessing
+      run: python -m src.preprocess
+
+    # ---------------------------------------------------------
+    # Train Model
+    # ---------------------------------------------------------
+
+    - name: Train Model
+      run: python -m src.train
+
+    # ---------------------------------------------------------
+    # Run Evaluation
+    # ---------------------------------------------------------
+
+    - name: Run Evaluation
+      run: python -m src.evaluate
+
+    # ---------------------------------------------------------
+    # Run Visualization
+    # ---------------------------------------------------------
+
+    - name: Run Visualization
+      run: python -m src.visualization
+
+    # ---------------------------------------------------------
+    # Run Tests
+    # ---------------------------------------------------------
+
+    - name: Run Tests
+      run: pytest -v

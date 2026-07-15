@@ -4,9 +4,13 @@
 import pandas as pd
 import joblib
 
+from pathlib import Path
 from sklearn.pipeline import Pipeline
 from sklearn.linear_model import LogisticRegression
 from sklearn.feature_extraction.text import TfidfVectorizer
+
+MODEL_DIR = Path("model")
+MODEL_DIR.mkdir(exist_ok=True)
 
 # ==========================================================
 # Load Training Dataset
@@ -86,7 +90,7 @@ print("\nModel training completed")
 
 joblib.dump(
     pipeline,
-    "model/stress_detection_pipeline.pkl"
+    MODEL_DIR/"stress_detection_pipeline.pkl"
 )
 
 print("\nPipeline saved successfully.")
